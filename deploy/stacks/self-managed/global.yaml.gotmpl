@@ -28,7 +28,7 @@ tolerations:
 highAvailability helpers.
 
 global.yaml.gotmpl maps highAvailability.* onto chart values (replicaCount,
-affinity, topology spread, PDB, update strategy).
+affinity, PDB, update strategy).
 
 When highAvailability.enabled is false, callers keep existing env/chart defaults
 (local / CI / BDD). When true, apply HA sizing: Tier-1 replicaCount ≥2,

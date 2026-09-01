@@ -652,7 +652,7 @@ grpcproxy:
 # Resilience settings are exposed as a single highAvailability: block in
 # self-managed Helmfile environment values.
 # deploy/stacks/self-managed/global.yaml.gotmpl maps highAvailability.* onto
-# chart values (replicaCount, affinity, topology spread, PDB, update strategy).
+# chart values (replicaCount, affinity, PDB, update strategy).
 #
 # deploy/stacks/self-managed/
 # ├── environments/<env>.yaml     # highAvailability: configuration
@@ -673,11 +673,6 @@ highAvailability:
     podAntiAffinity:
       enabled: true
       type: preferred
-    topologySpread:
-      enabled: true
-      maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: ScheduleAnyway
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
@@ -687,8 +682,6 @@ highAvailability:
 
   nats:
     replicas: 3
-    jetstream:
-      replicaFactor: 2
     podDisruptionBudget:
       enabled: true
       merge:
@@ -704,12 +697,6 @@ highAvailability:
 
   cassandra:
     replicaCount: 3
-    # Multi-AZ (production two-site): NetworkTopologyStrategy with RF per DC;
-    # clients use LOCAL_QUORUM so reads/writes do not wait on the remote AZ.
-    # Single-DC: SimpleStrategy with RF=3 and QUORUM is fine.
-    replicationFactor: 3
-    replicationStrategy: NetworkTopologyStrategy
-    consistencyLevel: LOCAL_QUORUM
     podDisruptionBudget:
       enabled: true
       minAvailable: 2
